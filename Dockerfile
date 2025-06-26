@@ -24,11 +24,6 @@ WORKDIR /var/www
 # Copia os arquivos do projeto
 COPY . .
 
-# Instala Xdebug
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
-COPY .docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
-
 # Permissões
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage
