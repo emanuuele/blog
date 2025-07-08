@@ -75,7 +75,7 @@
                   </svg>
                 <?php endif; ?>
               </div>
-              <p class="text-neutral-500 text-[13px] font-bold leading-normal tracking-[0.015em]">
+              <p class="text-neutral-500 text-[13px] font-bold leading-normal tracking-[0.015em]" id="like-count">
                 <?= $artigo->curtidas ?>
               </p>
             </button>

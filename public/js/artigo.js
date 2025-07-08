@@ -12,17 +12,14 @@ function like(id) {
         )
         .then(function (response) {
             if (response.data.success) {
-                $("#like-count-" + id).text(response.data.likes);
+                let likes = document.getElementById("like-count").textContent;
+                return document.getElementById("like-count").textContent = parseInt(likes) + 1;
             } else {
-                alert("Erro ao curtir o artigo.");
+                alert("Erro ao curtir o artigo." + response.data.message);                
             }
         })
         .catch(function (error) {
-            if (error.response && error.response.status === 401) {
-                alert("Você precisa estar logado para curtir o artigo.");
-            } else {
-                alert("Erro ao curtir o artigo.");
-            }
+            alert("Erro ao curtir o artigo." + error.response.data.message);
         });
 }
 

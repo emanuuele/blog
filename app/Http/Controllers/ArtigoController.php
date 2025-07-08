@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Artigo;
 use App\Models\Comentario;
+use App\Models\AcoesPost;
 class ArtigoController extends Controller
 {
     public function create()
@@ -43,6 +44,12 @@ class ArtigoController extends Controller
         $artigo->comentarios = Comentario::where('artigo_id', $id)
             ->with('usuario:id,nome')
             ->get();
+        $artigo->curtidas = AcoesPost::where('artigo_id', $id)
+            ->where('acao', 'curtida')
+            ->count();
+        $artigo->salvamentos = AcoesPost::where('artigo_id', $id)
+            ->where('acao', 'salvamento')
+            ->count();
         return response()->view("artigo", ["artigo" => $artigo]);
     }
 
@@ -77,15 +84,31 @@ class ArtigoController extends Controller
 
     public function like($id)
     {
-        $artigo = Artigo::find($id);
+        try {
+            $artigo = Artigo::find($id);
 
-        if (!$artigo) {
-            return response()->json(['message' => 'Artigo não encontrado'], 404);
+            if (!$artigo) {
+                return response()->json(['message' => 'Artigo não encontrado'], 404);
+            }
+
+            if(AcoesPost::where('artigo_id', $id)
+                ->where('usuario_id', \Illuminate\Support\Facades\Auth::user()->id)
+                ->where('acao', 'curtida')
+                ->exists()) {
+                return response()->json(["success" => false, "message" => "Você já curtiu este artigo."], 400);
+            }
+
+            $acao = AcoesPost::create([
+                'acao' => 'curtida',
+                'artigo_id' => $id,
+                'usuario_id' => \Illuminate\Support\Facades\Auth::user()->id
+            ]);
+
+            return response()->json(["success" => true, "message" => "Artigo curtido com sucesso."]);
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+            return response()->json(["success" => false, "message" => "Erro ao curtir o artigo: " . $th->getMessage()], 500);
         }
-
-        $artigo->increment('curtidas');
-
-        return response()->json(["success" => true, "message" => "Artigo curtido com sucesso."]);
     }
 
     public function save($id)
