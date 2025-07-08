@@ -25,25 +25,28 @@ class ComentarioController extends Controller
         if (empty($comentario)) {
             return response()->view("artigo", [
                 "artigo" => Artigo::findOrFail($id),
-                "error" => "Comentário não pode ser vazio"
+                "error" => "Comentário não pode ser vazio",
+                "usuario" => \Illuminate\Support\Facades\Auth::user(),
             ]);
         }
 
         if (strlen($comentario) > 255) {
             return response()->view("artigo", [
                 "artigo" => Artigo::findOrFail($id),
-                "error" => "Comentário muito longo"
+                "error" => "Comentário muito longo",
+                "usuario" => \Illuminate\Support\Facades\Auth::user(),
             ]);
         }
         if (strlen($comentario) < 5) {
             return response()->view("artigo", [
                 "artigo" => Artigo::findOrFail($id),
-                "error" => "Comentário muito curto"
+                "error" => "Comentário muito curto",
+                "usuario" => \Illuminate\Support\Facades\Auth::user(),
             ]);
         }
         $comentario = Comentario::create([
             'artigo_id' => $id,
-            'usuario_id' => 1,
+            'usuario_id' => \Illuminate\Support\Facades\Auth::user()->id,
             'conteudo' => $comentario
         ]);
         $artigo = Artigo::findOrFail($id);

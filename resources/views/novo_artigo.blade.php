@@ -11,6 +11,7 @@
   <title>Blog</title>
   <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
+  <link rel="stylesheet" href="/css/app.css">
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 
@@ -21,9 +22,10 @@
     null;
   ?>
   <form action="<?= empty($artigo->id) ?
-                  "/api/artigo/create" :
-                  "/api/artigo/update/" . $artigo->id;
+                  "/artigo/create" :
+                  "/artigo/update/" . $artigo->id;
                 ?>" method="post">
+                @csrf
     <div class="relative flex size-full min-h-screen flex-col bg-neutral-50 group/design-root overflow-x-hidden" style='font-family: Newsreader, "Noto Sans", sans-serif;'>
       <div class="layout-container flex h-full grow flex-col">
         <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#ededed] px-10 py-3">
@@ -44,8 +46,8 @@
               <a class="text-[#141414] text-sm font-medium leading-normal" href="/">Home</a>
             </div>
             <div
-              class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-              style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBp1GsYdt0nhqttoWq-JPllNKST-boTOovPzFZGRrlX9GunxS6mH7t3GFrzxaKyQutt6NEzX2TVPKbvnaBbGIzKBU8QmUedcG8VavmoE7g6wVuhn8h92yydNXYWIi5wdl4fKZofbtrpU9-hcvY5QpLznJyIuHh3VwJWcIKqr07Yw5ySGr5TX_DNsygrZt5pdTK7Agdv2ol2KhFNlkT65pXE4FuOKQjGcvunMr1hr4jO1VnVAdOyMOgwiofQY4iBM4OKww4AAAm4Hpc");'></div>
+              class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 usuario-perfil"
+              ><p><?= $usuario->nome[0]?></p></div>
           </div>
         </header>
         <div class="px-40 flex flex-1 justify-center py-5">

@@ -8,6 +8,7 @@
     onload="this.rel='stylesheet'"
     href="https://fonts.googleapis.com/css2?display=swap&amp;family=Newsreader%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" />
 
+  <link rel="stylesheet" href="/css/app.css">
   <title>Blog</title>
   <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
@@ -40,8 +41,10 @@
             <span class="truncate">Novo Artigo</span>
           </a>
           <div
-            class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD1ALuBD24bByXex6ozKSyLqW4p6CqDbwbCY9k9_rGUIKFPJlsf4Hjm_X3pRxVNFt57W086Z5z_nxWMMhb6SFGYH2BX0H3LEFBL8hg7D8S_aOdfVETSoybv9nUujYraY-To9nXFRGF9wYbXG-2_rLrixWEVCRWKlyC3PEOdyvwT5vwn4tOT3i0TShgULziSGgYdjSXJByfiZmiJ6gX4liC2-lpXc66wrZ7lIRzmD8rlnJRV87EeuyjWS697J-Y1YeSfzBni0wGEM_A");'></div>
+            class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 usuario-perfil"
+          >
+            <p><?= $usuario->nome[0]?></p>
+          </div>
         </div>
       </header>
       <div class="px-40 flex flex-1 justify-center py-5">
@@ -53,15 +56,17 @@
           </div>
           <div class="flex w-[100%] justify-between">
             <h2 class="text-[#141414] tracking-light text-[28px] font-bold leading-tight px-4 text-left pb-3 pt-5"><?= $artigo->titulo ?></h2>
-            <span><a href="/artigo/updateForm/<?=$artigo->id?>">editar</a></span> \
-            <span><button onclick="excluirArtigo(<?=$artigo->id?>)">excluir</button></span>
+            @if ($artigo->usuario_id == \Illuminate\Support\Facades\Auth::user()->id)
+              <span><a href="/artigo/updateForm/<?=$artigo->id?>">editar</a></span> \
+              <span><button onclick="excluirArtigo(<?=$artigo->id?>)">excluir</button></span>
+            @endif
           </div>
           <p class="text-neutral-500 text-sm font-normal leading-normal pb-3 pt-1 px-4">Publicado por <?= $artigo->usuario->nome ?>, <?= date('d/m/Y', strtotime($artigo->created_at)) ?></p>
           <p class="text-[#141414] text-base font-normal leading-normal pb-3 pt-1 px-4">
             <?= $artigo->conteudo ?>
           </p>
           <div class="flex flex-wrap gap-4 px-4 py-2 py-2">
-            <button onclick="<?= $artigo->curtido ? '' : 'like(' . $artigo->id . ')' ?>" class="flex items-center justify-center gap-2 px-3 py-2">
+            <button onclick="like(<?= $artigo->id ?>)" class="flex items-center justify-center gap-2 px-3 py-2">
               <div class="text-neutral-500" data-icon="Heart" data-size="24px" data-weight="regular">
                 <?php if ($artigo->salvo): ?>
                   <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
@@ -73,7 +78,7 @@
                   </svg>
                 <?php endif; ?>
               </div>
-              <p class="text-neutral-500 text-[13px] font-bold leading-normal tracking-[0.015em]">
+              <p class="text-neutral-500 text-[13px] font-bold leading-normal tracking-[0.015em]" id="like-count">
                 <?= $artigo->curtidas ?>
               </p>
             </button>
@@ -98,7 +103,7 @@
                   </svg>
                 <?php endif; ?>
               </div>
-              <p class="text-neutral-500 text-[13px] font-bold leading-normal tracking-[0.015em]"><?= $artigo->salvamentos ?></p>
+              <p class="text-neutral-500 text-[13px] font-bold leading-normal tracking-[0.015em]" id="save-count"><?= $artigo->salvamentos ?></p>
             </button>
           </div>
           <h2 class="text-[#141414] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Comentários</h2>
@@ -111,7 +116,10 @@
               <div class="flex h-full flex-1 flex-col items-start justify-start">
                 <div class="flex w-full flex-row items-start justify-start gap-x-3">
                   <p class="text-[#141414] text-sm font-bold leading-normal tracking-[0.015em]"><?= $comentario->usuario->nome ?></p>
-                  <p class="text-neutral-500 text-sm font-normal leading-normal"><?= date('d/m/Y', strtotime($comentario->created_at)) ?> </p> <button onclick="editarButton(<?= $comentario->id ?>)"> editar </button> <button onclick="deleteComment(<?= $comentario->id ?>)"> excluir </button>
+                  <p class="text-neutral-500 text-sm font-normal leading-normal"><?= date('d/m/Y', strtotime($comentario->created_at)) ?> </p> 
+                  @if ($comentario->usuario_id == \Illuminate\Support\Facades\Auth::user()->id)
+                    <button onclick="deleteComment(<?= $comentario->id ?>)"> excluir </button>
+                  @endif
                 </div>
                 <p id="comment-<?= $comentario->id ?>" class="text-[#141414] text-sm font-normal leading-normal">
                   <?= $comentario->conteudo ?>
@@ -124,7 +132,8 @@
               class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 shrink-0"
               style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwWe2AgnvVhhrur-rR_s5VzBdheYvSA9MWx-wEblkhMrLgmnulElX3GzP_nXjZOy36mt0yQexMcf7Qb63ypaJRfNmeGcguP0p7-OHA3TW1k91IzphbKcjA23_1SQalzMetWpkbpZFevCjE5MACe0UP5aFjDfgiDUloGkuncUxGKF2UDMCrb9qykZF_Mlj9JzD5YuwnE4X3Ab5j63NaY0qqcP4xyUfqifGLHZaPljzsB0O2Skyo76CmR3C3soqGcIhGe5skjEP6yzY");'></div>
             <label class="flex flex-col min-w-40 h-12 flex-1">
-              <form action="/api/artigo/comment/<?= $artigo->id ?>" id="comment-form" method="post">
+              <form action="/artigo/comment/<?= $artigo->id ?>" id="comment-form" method="post">
+                @csrf
                 <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
                   <input
                     placeholder="Adicione um comentário"

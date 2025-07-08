@@ -1,7 +1,7 @@
 function like(id) {
     axios
         .post(
-            "/api/artigo/like/" + id,
+            "/artigo/like/" + id,
             {},
             {
                 headers: {
@@ -12,24 +12,21 @@ function like(id) {
         )
         .then(function (response) {
             if (response.data.success) {
-                $("#like-count-" + id).text(response.data.likes);
+                let likes = document.getElementById("like-count").textContent;
+                return document.getElementById("like-count").textContent = parseInt(likes) + 1;
             } else {
-                alert("Erro ao curtir o artigo.");
+                alert("Erro ao curtir o artigo." + response.data.message);                
             }
         })
         .catch(function (error) {
-            if (error.response && error.response.status === 401) {
-                alert("Você precisa estar logado para curtir o artigo.");
-            } else {
-                alert("Erro ao curtir o artigo.");
-            }
+            alert("Erro ao curtir o artigo." + error.response.data.message);
         });
 }
 
 function save(id) {
     axios
         .post(
-            "/api/artigo/save/" + id,
+            "/artigo/save/" + id,
             {},
             {
                 headers: {
@@ -40,44 +37,38 @@ function save(id) {
         )
         .then(function (response) {
             if (response.data.success) {
-                $("#save-count-" + id).text(response.data.saves);
+                let saves = document.getElementById("save-count").textContent;
+                return document.getElementById("save-count").textContent = parseInt(saves) + 1;
             } else {
-                alert("Error saving the article.");
+                alert("Erro ao salvar o artigo." + response.data.message);
             }
         })
-        .catch(function () {
-            alert("Error saving the article.");
+        .catch(function (error) {
+            alert("Erro ao salvar o artigo." + error.response.data.message);
         });
 }
 
 function deleteComment(commentId) {
     axios
-        .post(
+        .delete(
             "/api/artigo/comment/delete/" + commentId,
-            {},
-            {
-                headers: {
-                    Authorization:
-                        "Bearer " + localStorage.getItem("auth_token"),
-                },
-            }
         )
         .then(function (response) {
             if (response.data.success) {
                 window.location.reload();
             } else {
-                alert("Error deleting the comment.");
+                alert("Erro ao excluir o comentário. " + response.data.message);
             }
         })
-        .catch(function () {
-            alert("Error deleting the comment.");
+        .catch(function (error) {
+            alert("Erro ao excluir o comentário. " + error.response.data.message);
         });
 }
 
 function excluirArtigo(id) {
     axios
         .delete(
-            "/api/artigo/delete/" + id,
+            "/artigo/delete/" + id,
             {},
             {
                 headers: {

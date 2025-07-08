@@ -15,7 +15,8 @@
 </head>
 
 <body>
-  <form id="loginForm">
+  <form method = "POST" action="signin">
+    @csrf
     <div class="relative flex size-full min-h-screen flex-col bg-neutral-50 group/design-root overflow-x-hidden" style='font-family: Newsreader, "Noto Sans", sans-serif;'>
       <div class="layout-container flex h-full grow flex-col">
         <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#ededed] px-10 py-3">
@@ -70,6 +71,9 @@
                 class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#141414] text-neutral-50 text-sm font-bold leading-normal tracking-[0.015em]">
                 <span class="truncate">Entrar</span>
               </button>
+              <?php if (!empty($erro)) :?>
+                <div><span><?=$erro?></span></div>
+              <?php endif;?>
             </div>
           </div>
         </div>
@@ -77,42 +81,4 @@
     </div>
   </form>
 </body>
-
-<script>
-  document
-    .getElementById("loginForm")
-    .addEventListener("submit", function (event) {
-        event.preventDefault();
-        const email = this.email.value;
-        const password = this.password.value;
-
-        fetch("/api/signin", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success && data.token) {
-                    localStorage.setItem("auth_token", data.token);
-                    alert("Login realizado com sucesso!");
-                    window.location.href = "/";
-                } else {
-                    alert(
-                        "Erro ao fazer login: " +
-                            (data.error || JSON.stringify(data))
-                    );
-                }
-            })
-            .catch((error) => {
-                alert("Login failed: " + error.message);
-            });
-    });
-</script>
-
 </html>
