@@ -33,7 +33,8 @@ class ArtigoController extends Controller
         } catch (\Exception $e) {
             return response()->view("novo_artigo", [
                 "artigo" => new Artigo(),
-                "error" => "Erro ao criar artigo: " . $e->getMessage()
+                "error" => "Erro ao criar artigo: " . $e->getMessage(),
+                "usuario" => \Illuminate\Support\Facades\Auth::user()
             ]);
         }
     }
@@ -50,13 +51,13 @@ class ArtigoController extends Controller
         $artigo->salvamentos = AcoesPost::where('artigo_id', $id)
             ->where('acao', 'salvamento')
             ->count();
-        return response()->view("artigo", ["artigo" => $artigo]);
+        return response()->view("artigo", ["artigo" => $artigo, "usuario" => \Illuminate\Support\Facades\Auth::user()]);
     }
 
     public function list()
     {
         $artigos = Artigo::all();
-        return response()->view("home", ["artigos" => $artigos]);
+        return response()->view("home", ["artigos" => $artigos, "usuario" => \Illuminate\Support\Facades\Auth::user()]);
     }
 
     public function update($id)
@@ -77,7 +78,8 @@ class ArtigoController extends Controller
         } catch (\Exception $e) {
             return response()->view("novo_artigo", [
                 "artigo" => Artigo::find($id),
-                "error" => "Erro ao atualizar artigo: " . $e->getMessage()
+                "error" => "Erro ao atualizar artigo: " . $e->getMessage(),
+                "usuario" => \Illuminate\Support\Facades\Auth::user()
             ]);
         }
     }
@@ -113,15 +115,31 @@ class ArtigoController extends Controller
 
     public function save($id)
     {
-        $artigo = Artigo::find($id);
+        try {
+            $artigo = Artigo::find($id);
 
-        if (!$artigo) {
-            return response()->json(['message' => 'Artigo não encontrado'], 404);
+            if (!$artigo) {
+                return response()->json(['message' => 'Artigo não encontrado'], 404);
+            }
+
+            if(AcoesPost::where('artigo_id', $id)
+                ->where('usuario_id', \Illuminate\Support\Facades\Auth::user()->id)
+                ->where('acao', 'salvamento')
+                ->exists()) {
+                return response()->json(["success" => false, "message" => "Você já salvou este artigo."], 400);
+            }
+
+            $acao = AcoesPost::create([
+                'acao' => 'salvamento',
+                'artigo_id' => $id,
+                'usuario_id' => \Illuminate\Support\Facades\Auth::user()->id
+            ]);
+
+            return response()->json(["success" => true, "message" => "Artigo salvo com sucesso."]);
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+            return response()->json(["success" => false, "message" => "Erro ao salvar o artigo: " . $th->getMessage()], 500);
         }
-
-        $artigo->increment('salvamentos');
-
-        return response()->json(["success" => true, "message" => "Artigo salvo com sucesso."]);
     }
 
     public function delete($id)
@@ -141,7 +159,7 @@ class ArtigoController extends Controller
     {
         $artigo = Artigo::find($id);
 
-        return response()->view("novo_artigo", ["artigo" => $artigo]);
+        return response()->view("novo_artigo", ["artigo" => $artigo, "usuario" => \Illuminate\Support\Facades\Auth::user()]);
     }
 
     public function createForm()
@@ -149,6 +167,6 @@ class ArtigoController extends Controller
         $artigo = new Artigo();
         $artigo->titulo = "";
         $artigo->conteudo = "";
-        return response()->view("novo_artigo", ["artigo" => $artigo]);
+        return response()->view("novo_artigo", ["artigo" => $artigo, "usuario" => \Illuminate\Support\Facades\Auth::user()]);
     }
 }

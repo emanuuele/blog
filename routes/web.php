@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/artigo/createForm', 'App\Http\Controllers\ArtigoController@createForm');
-Route::get('/artigo/updateForm/{id}', 'App\Http\Controllers\ArtigoController@updateForm');
-Route::get('/artigo/{id}', 'App\Http\Controllers\ArtigoController@read');
-Route::get('/', 'App\Http\Controllers\ArtigoController@list');
+Route::get('/artigo/createForm', 'App\Http\Controllers\ArtigoController@createForm')->middleware('auth');
+Route::get('/artigo/updateForm/{id}', 'App\Http\Controllers\ArtigoController@updateForm')->middleware('auth');
+Route::get('/artigo/{id}', 'App\Http\Controllers\ArtigoController@read')->middleware('auth');
+Route::get('/', 'App\Http\Controllers\ArtigoController@list')->middleware('auth');
 Route::get('/signinForm', 'App\Http\Controllers\Usuario@signinForm')->name('login');
 Route::get('/signupForm', 'App\Http\Controllers\Usuario@signupForm');
 Route::post('/signin', 'App\Http\Controllers\Usuario@signin');

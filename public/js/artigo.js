@@ -37,37 +37,31 @@ function save(id) {
         )
         .then(function (response) {
             if (response.data.success) {
-                $("#save-count-" + id).text(response.data.saves);
+                let saves = document.getElementById("save-count").textContent;
+                return document.getElementById("save-count").textContent = parseInt(saves) + 1;
             } else {
-                alert("Error saving the article.");
+                alert("Erro ao salvar o artigo." + response.data.message);
             }
         })
-        .catch(function () {
-            alert("Error saving the article.");
+        .catch(function (error) {
+            alert("Erro ao salvar o artigo." + error.response.data.message);
         });
 }
 
 function deleteComment(commentId) {
     axios
-        .post(
-            "/artigo/comment/delete/" + commentId,
-            {},
-            {
-                headers: {
-                    Authorization:
-                        "Bearer " + localStorage.getItem("auth_token"),
-                },
-            }
+        .delete(
+            "/api/artigo/comment/delete/" + commentId,
         )
         .then(function (response) {
             if (response.data.success) {
                 window.location.reload();
             } else {
-                alert("Error deleting the comment.");
+                alert("Erro ao excluir o comentário. " + response.data.message);
             }
         })
-        .catch(function () {
-            alert("Error deleting the comment.");
+        .catch(function (error) {
+            alert("Erro ao excluir o comentário. " + error.response.data.message);
         });
 }
 

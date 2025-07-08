@@ -19,11 +19,13 @@ class Usuario extends Controller
             ]);
 
             return response()->view("signin", [
-                "erro" => ""
+                "erro" => "",
+                "usuario" => \Illuminate\Support\Facades\Auth::user(),
             ]);
         } catch (\Exception $e) {
             return response()->view("signup", [
-                "erro" => "Erro ao cadastrar usuário: " . $e->getMessage()
+                "erro" => "Erro ao cadastrar usuário: " . $e->getMessage(),
+                "usuario" => \Illuminate\Support\Facades\Auth::user(),
             ]);
         }
     }
@@ -45,18 +47,23 @@ class Usuario extends Controller
 
         } catch (\Exception $e) {
             return response()->view("signin", [
-                "erro" => "Erro ao fazer login: " . $e->getMessage()
+                "erro" => "Erro ao fazer login: " . $e->getMessage(),
+                "usuario" => \Illuminate\Support\Facades\Auth::user()
             ]);
         }
     }
 
     public function signinForm()
     {
-        return response()->view("signin");
+        return response()->view("signin", [
+            "usuario" => \Illuminate\Support\Facades\Auth::user()
+        ]);
     }
     public function signupForm()
     {
-        return response()->view("signup");
+        return response()->view("signup", [
+            "usuario" => \Illuminate\Support\Facades\Auth::user()
+        ]);
     }
 
     public function logout(Request $request)

@@ -7,7 +7,7 @@
     as="style"
     onload="this.rel='stylesheet'"
     href="https://fonts.googleapis.com/css2?display=swap&amp;family=Newsreader%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" />
-
+  <link rel="stylesheet" href="/css/app.css">
   <title>Blog</title>
   <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
@@ -36,9 +36,9 @@
             <a class="truncate" href="/artigo/createForm">Novo Artigo</a>
           </button>
           <a
-            class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+            class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 usuario-perfil"
             href="/signinForm"
-            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBnJMxcXYdXNK5_YolbZ4kw_7oS5WJpv7Z_DbjH0SJLGZflLCHUiiRRFPCngj1NLslhyzc3huXt_IhrNYDw63dWdDoatx_qDMGJf7rUMCYetjYEITxZli42dcMGoS--AdaqIri5AvGkaGltti7i-ZhJFS72BLHPd4MgR6eGc7rQnkPP7AnojuKxxwFXfjMPjoAPOqs-oIQPen5SfuCzkc_3VGKkY_VgJt1_0SoFvZnE4wT62A5CWYyrhsS9jwJlqrBHV63q8K8QEV0");'></a>
+            ><p><?= $usuario->nome[0]?></p></a>
         </div>
       </header>
       <div class="px-40 flex flex-1 justify-center py-5">
