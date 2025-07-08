@@ -53,8 +53,10 @@
           </div>
           <div class="flex w-[100%] justify-between">
             <h2 class="text-[#141414] tracking-light text-[28px] font-bold leading-tight px-4 text-left pb-3 pt-5"><?= $artigo->titulo ?></h2>
-            <span><a href="/artigo/updateForm/<?=$artigo->id?>">editar</a></span> \
-            <span><button onclick="excluirArtigo(<?=$artigo->id?>)">excluir</button></span>
+            @if ($artigo->usuario_id == \Illuminate\Support\Facades\Auth::user()->id)
+              <span><a href="/artigo/updateForm/<?=$artigo->id?>">editar</a></span> \
+              <span><button onclick="excluirArtigo(<?=$artigo->id?>)">excluir</button></span>
+            @endif
           </div>
           <p class="text-neutral-500 text-sm font-normal leading-normal pb-3 pt-1 px-4">Publicado por <?= $artigo->usuario->nome ?>, <?= date('d/m/Y', strtotime($artigo->created_at)) ?></p>
           <p class="text-[#141414] text-base font-normal leading-normal pb-3 pt-1 px-4">
@@ -111,7 +113,11 @@
               <div class="flex h-full flex-1 flex-col items-start justify-start">
                 <div class="flex w-full flex-row items-start justify-start gap-x-3">
                   <p class="text-[#141414] text-sm font-bold leading-normal tracking-[0.015em]"><?= $comentario->usuario->nome ?></p>
-                  <p class="text-neutral-500 text-sm font-normal leading-normal"><?= date('d/m/Y', strtotime($comentario->created_at)) ?> </p> <button onclick="editarButton(<?= $comentario->id ?>)"> editar </button> <button onclick="deleteComment(<?= $comentario->id ?>)"> excluir </button>
+                  <p class="text-neutral-500 text-sm font-normal leading-normal"><?= date('d/m/Y', strtotime($comentario->created_at)) ?> </p> 
+                  @if ($comentario->usuario_id == \Illuminate\Support\Facades\Auth::user()->id)
+                    <button onclick="editarButton(<?= $comentario->id ?>)"> editar </button> 
+                    <button onclick="deleteComment(<?= $comentario->id ?>)"> excluir </button>
+                  @endif
                 </div>
                 <p id="comment-<?= $comentario->id ?>" class="text-[#141414] text-sm font-normal leading-normal">
                   <?= $comentario->conteudo ?>
@@ -124,7 +130,8 @@
               class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 shrink-0"
               style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwWe2AgnvVhhrur-rR_s5VzBdheYvSA9MWx-wEblkhMrLgmnulElX3GzP_nXjZOy36mt0yQexMcf7Qb63ypaJRfNmeGcguP0p7-OHA3TW1k91IzphbKcjA23_1SQalzMetWpkbpZFevCjE5MACe0UP5aFjDfgiDUloGkuncUxGKF2UDMCrb9qykZF_Mlj9JzD5YuwnE4X3Ab5j63NaY0qqcP4xyUfqifGLHZaPljzsB0O2Skyo76CmR3C3soqGcIhGe5skjEP6yzY");'></div>
             <label class="flex flex-col min-w-40 h-12 flex-1">
-              <form action="/api/artigo/comment/<?= $artigo->id ?>" id="comment-form" method="post">
+              <form action="/artigo/comment/<?= $artigo->id ?>" id="comment-form" method="post">
+                @csrf
                 <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
                   <input
                     placeholder="Adicione um comentário"

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Usuario as ModelsUsuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class Usuario extends Controller
 {
@@ -29,13 +30,24 @@ class Usuario extends Controller
 
     public function signin(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        try {
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ]);
 
-        if (!$token = Auth::guard('api')->attempt($credentials)) {
-            return response()->json(['success' => false, "error" => "credenciais invalidas"], 401);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/signinForm');
+        } else { 
+            throw new Exception("Usuário não existe");
         }
 
-        return response()->json(['success' => true, 'token' => $token]);
+        } catch (\Exception $e) {
+            return response()->view("signin", [
+                "erro" => "Erro ao fazer login: " . $e->getMessage()
+            ]);
+        }
     }
 
     public function signinForm()

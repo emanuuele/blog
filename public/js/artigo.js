@@ -1,7 +1,7 @@
 function like(id) {
     axios
         .post(
-            "/api/artigo/like/" + id,
+            "/artigo/like/" + id,
             {},
             {
                 headers: {
@@ -29,7 +29,7 @@ function like(id) {
 function save(id) {
     axios
         .post(
-            "/api/artigo/save/" + id,
+            "/artigo/save/" + id,
             {},
             {
                 headers: {
@@ -53,7 +53,7 @@ function save(id) {
 function deleteComment(commentId) {
     axios
         .post(
-            "/api/artigo/comment/delete/" + commentId,
+            "/artigo/comment/delete/" + commentId,
             {},
             {
                 headers: {
@@ -77,7 +77,7 @@ function deleteComment(commentId) {
 function excluirArtigo(id) {
     axios
         .delete(
-            "/api/artigo/delete/" + id,
+            "/artigo/delete/" + id,
             {},
             {
                 headers: {

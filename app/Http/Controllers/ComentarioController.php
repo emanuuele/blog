@@ -43,7 +43,7 @@ class ComentarioController extends Controller
         }
         $comentario = Comentario::create([
             'artigo_id' => $id,
-            'usuario_id' => 1,
+            'usuario_id' => \Illuminate\Support\Facades\Auth::user()->id,
             'conteudo' => $comentario
         ]);
         $artigo = Artigo::findOrFail($id);

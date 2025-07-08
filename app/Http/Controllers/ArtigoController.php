@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Artigo;
 use App\Models\Comentario;
-
 class ArtigoController extends Controller
 {
     public function create()
@@ -18,10 +17,12 @@ class ArtigoController extends Controller
                 throw new \Exception("Título, conteúdo e ID do usuário são obrigatórios.");
             }
 
+            $user = \Illuminate\Support\Facades\Auth::user();
+
             $artigo = Artigo::create([
                 'titulo' => $titulo,
                 'conteudo' => $conteudo,
-                'usuario_id' => 1,
+                'usuario_id' => $user->id ?? 1, 
                 'curtidas' => 0,
                 'comentarios' => 0,
                 'salvamentos' => 0
@@ -63,7 +64,6 @@ class ArtigoController extends Controller
             $artigo = $artigo->update([
                 'titulo' => request('titulo'),
                 'conteudo' => request('conteudo'),
-                'usuario_id' => 1
             ]);
 
             return response()->redirectTo("/artigo/$id");

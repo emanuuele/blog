@@ -21,9 +21,10 @@
     null;
   ?>
   <form action="<?= empty($artigo->id) ?
-                  "/api/artigo/create" :
-                  "/api/artigo/update/" . $artigo->id;
+                  "/artigo/create" :
+                  "/artigo/update/" . $artigo->id;
                 ?>" method="post">
+                @csrf
     <div class="relative flex size-full min-h-screen flex-col bg-neutral-50 group/design-root overflow-x-hidden" style='font-family: Newsreader, "Noto Sans", sans-serif;'>
       <div class="layout-container flex h-full grow flex-col">
         <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#ededed] px-10 py-3">
