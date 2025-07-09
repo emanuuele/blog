@@ -65,17 +65,17 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'url' => env('DATABASE_URL', ''),
+            'host' => "ep-rough-field-ae5c8q1a-pooler.c-2.us-east-2.aws.neon.tech",
             'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8',
+            'database' => env('DB_DATABASE', 'neondb'),
+            'username' => env('DB_USERNAME', 'neondb_owner'),
+            'password' => env('DB_PASSWORD', 'npg_n3XJFAouw4xd'),
+            'charset' => 'utf8',        
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'prefer',
+            'sslmode' => 'require',
         ],
 
         'sqlsrv' => [
