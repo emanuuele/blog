@@ -24,6 +24,9 @@ WORKDIR /var/www
 # Copia os arquivos do projeto
 COPY . .
 
+# Instala dependências do Laravel
+RUN composer install --no-dev --optimize-autoloader
+
 # Permissões
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage
