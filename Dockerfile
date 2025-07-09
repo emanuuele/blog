@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     npm \
     libzip-dev \
     libpq-dev \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl
+    && docker-php-ext-install pdo pdo_pgsql mbstring zip exif pcntl
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -29,4 +29,4 @@ RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage
 
 EXPOSE 9000
-CMD ["php-fpm"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]

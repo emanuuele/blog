@@ -108,7 +108,7 @@ class ArtigoController extends Controller
 
             return response()->json(["success" => true, "message" => "Artigo curtido com sucesso."]);
         } catch (\Throwable $th) {
-            echo $th->getMessage();
+            echo $th;
             return response()->json(["success" => false, "message" => "Erro ao curtir o artigo: " . $th->getMessage()], 500);
         }
     }

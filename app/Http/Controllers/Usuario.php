@@ -18,10 +18,7 @@ class Usuario extends Controller
                 'password' => bcrypt($request->input('password')),
             ]);
 
-            return response()->view("signin", [
-                "erro" => "",
-                "usuario" => \Illuminate\Support\Facades\Auth::user(),
-            ]);
+            return redirect()->intended('/');
         } catch (\Exception $e) {
             return response()->view("signup", [
                 "erro" => "Erro ao cadastrar usuário: " . $e->getMessage(),

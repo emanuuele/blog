@@ -26,16 +26,19 @@ services:
       - laravel
 
   db:
-    image: mysql:8.0
+  # substituir mysql por postgres
+    image: postgres:13
     container_name: blog_db
     hostname: db
     environment:
-      MYSQL_DATABASE: blog
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_DB: neondb
+      POSTGRES_USER: neondb_owner
+      POSTGRES_PASSWORD: npg_n3XJFAouw4xd
+    restart: always
     volumes:
-      - dbdata:/var/lib/mysql
+      - dbdata:/var/lib/postgresql
     ports:
-      - "3306:3306"
+      - "5432:5432"
     networks:
       laravel:
         aliases:
